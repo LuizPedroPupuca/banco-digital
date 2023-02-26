@@ -23,8 +23,8 @@ public class NovoCorrentistaRequest implements CadastraCorrentistaRequest {
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate dataDeNascimento;
 
-    @NotBlank
-    @CPF
+    @NotBlank (message = "o campo documento é obrigatório")
+    @CPF(message = "o campo documento deve ser um CPF válido")
     private String documento;
 
     @NotBlank @Size(min = 8)
