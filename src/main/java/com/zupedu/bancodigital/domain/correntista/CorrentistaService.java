@@ -25,7 +25,11 @@ public class CorrentistaService{
     private CorrentistaQuerysRepository repository;
 
     public List<Correntista> constroi(List<NovoCorrentistaRequest> request) {
-        return repository.salvaTudo(request.stream().map(CadastraCorrentistaRequest::paraCorrentista).collect(Collectors.toList()));
+       List<Correntista> correntistas = request.stream()
+                .map(CadastraCorrentistaRequest::paraCorrentista)
+                .collect(Collectors.toList());
+
+        return repository.salvaTudo(correntistas);
     }
 
     public Correntista busca(String documento) {
