@@ -38,14 +38,6 @@ public class AuthFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private void autenticarCliente(String token) {
-        Long idUsuario = tokenService.getIdUsuario(token);
-        Optional<Correntista> optionalUsuario = repository.findById(idUsuario);
-        Correntista correntista = optionalUsuario.get();
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(correntista, null, correntista.getAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-    }
-
     private Optional<String> getToken(String headerContent) {
         if(headerContent != null && headerContent.startsWith("Bearer ")){
             String token = headerContent.substring(7);
@@ -53,5 +45,13 @@ public class AuthFilter extends OncePerRequestFilter {
         }
 
         return Optional.empty();
+    }
+
+    private void autenticarCliente(String token) {
+        Long idUsuario = tokenService.getIdUsuario(token);
+        Optional<Correntista> optionalUsuario = repository.findById(idUsuario);
+        Correntista correntista = optionalUsuario.orElseThrow(InternalError::new);
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(correntista, null, correntista.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
     }
 }
